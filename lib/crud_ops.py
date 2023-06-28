@@ -1,9 +1,20 @@
+from models import Dog  # Import Dog model
+from models import Base
+
+from sqlalchemy import desc  # Import descending order function
 from sqlalchemy import (create_engine, desc,
     Index, Column, DateTime, Integer, String)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from models import Dog
+
+# Function to create the database
+def create_database(uri):
+    engine = create_engine(uri)
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine)
+    return Session()
+
 
 def create_table(base):
     class Dog(base):
@@ -18,8 +29,6 @@ def create_table(base):
                 + f"{self.name}, " \
                 + f"Breed {self.breed}"
 
-from models import Dog  # Import Dog model
-from sqlalchemy import desc  # Import descending order function
 
 # Function to save a dog instance
 def save(session, dog):
